@@ -38,7 +38,7 @@ module.exports.loop = function () {
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     if(builders.length < MAX_BUILDERS) {
         var newName = Game.spawns.Shadowhollow.createCreep([WORK,CARRY,MOVE], undefined, {role: 'builder'});
-        console.log('Spawning new harvester: ' + newName);
+        console.log('Spawning new builder: ' + newName);
     } else if(builders.length === MAX_BUILDERS && builders.length < 10) {
         MAX_BUILDERS += 1;
     }
