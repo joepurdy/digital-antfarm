@@ -1,0 +1,15 @@
+{
+  "name": "digital-antfarm",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Code for digital ants (screeps.com)",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joe Purdy",
+  "license": "",
+  "dependencies": {
+    "grunt": "^1.0.1",
+    "grunt-screeps": "^1.2.1"
+  }
+}
