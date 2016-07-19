@@ -39,11 +39,11 @@ module.exports.loop = function() {
 	var MIN_MINERS = 1,
 		NUM_MINERS = _.sum(Game.creeps, (c) => c.memory.role == 'miner');
 
-	var MIN_UPGRADERS = 1,
+	var MIN_UPGRADERS = 3,
 		NUM_UPGRADERS = _.sum(Game.creeps, (c) => c.memory.role == 'upgrader');
 
 	var MIN_BUILDERS = 1,
-		MAX_BUILDERS = 8,
+		MAX_BUILDERS = 6,
 		NUM_BUILDERS = _.sum(Game.creeps, (c) => c.memory.role == 'builder');
 
 	var MIN_HANDYMANS = 4,

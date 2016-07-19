@@ -1,63 +1,34 @@
+let util = require('helpers');
+
 var roleHarvester = {
     run: function(creep) {
-        if(creep.memory.working && creep.carry.energy == 0) {
-			creep.memory.working = false;
-		}
-		else if(!creep.memory.working && (creep.carry.energy == creep.carryCapacity || creep.memory.burndown)) {
-			creep.memory.working = true;
-		}
+        // Check for work state
+        util.isWorking(creep);
 
 		if(creep.memory.working == true) {
-            var energyBank = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                filter: (s) => (s.structureType == STRUCTURE_SPAWN ||
-                                s.structureType == STRUCTURE_EXTENSION) && 
-                                s.energy < s.energyCapacity
-            });
-            if(energyBank != undefined) {
-                if(creep.transfer(energyBank, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(energyBank);
-                }
+            try {
+                util.transferToSpawner(creep);
             }
-            else {
-                var fillableContainer = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: (s) => (s.structureType == STRUCTURE_CONTAINER ||
-                                    s.structureType == STRUCTURE_STORAGE) && 
-                                    _.sum(s.store) < s.storeCapacity
-                });
-                if(fillableContainer != undefined) {
-                    if(creep.transfer(fillableContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(fillableContainer);
-                    }
-                }
+            catch(err) {
+                console.log(err);
+                util.transferToStorage(creep);
             }
 		}
 		else {
-            var spawners = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                filter: (s) => (s.structureType == STRUCTURE_SPAWN ||
-                                s.structureType == STRUCTURE_EXTENSION) && 
-                                s.energy < s.energyCapacity
-            });
-            if(spawners != undefined) {
-                var filledContainer = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: (s) => (s.structureType == STRUCTURE_CONTAINER) &&
-                                    s.store[RESOURCE_ENERGY] > 0
-                });
-                if(filledContainer != undefined) {
-                    if(creep.withdraw(filledContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(filledContainer);
-                    }
-                }
+            try {
+                util.canFillSpawners(creep);
             }
-            else {
-                var source = Game.getObjectById("577b92ce0f9d51615fa472a9");
-                if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                    creep.memory.burndown = false;
-                    creep.moveTo(source);
-                }
-                else if(creep.harvest(source) == ERR_NOT_ENOUGH_RESOURCES) {
-                    if(creep.carry.energy > 0) {
-                        creep.memory.burndown = true;
+            catch(err) {
+                if(err === "SPAWNERS_CAN_FILL") {
+                    try {
+                        util.gatherStoredEnergy(creep);
                     }
+                    catch(err) {
+                        util.gatherEnergy(creep, "577b92ce0f9d51615fa472a9");
+                    }
+                }
+                else if(err === "SPAWNERS_FULL") {
+                    util.gatherEnergy(creep, "577b92ce0f9d51615fa472a9");
                 }
             }
 		}
