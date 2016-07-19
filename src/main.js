@@ -13,26 +13,6 @@ module.exports.loop = function() {
 		}
 	}
 
-	for(let name in Game.creeps) {
-		var creep = Game.creeps[name];
-
-		if(creep.memory.role == 'harvester') {
-			roleHarvester.run(creep);
-		}
-		if(creep.memory.role == 'miner') {
-			roleMiner.run(creep);
-		}
-		if(creep.memory.role == 'upgrader') {
-			roleUpgrader.run(creep);
-		}
-		if(creep.memory.role == 'builder') {
-			roleBuilder.run(creep);
-		}
-		if(creep.memory.role == 'handyman') {
-			roleHandyman.run(creep);
-		}
-	}
-
 	var MIN_HARVESTERS = 4,
 		NUM_HARVESTERS = _.sum(Game.creeps, (c) => c.memory.role == 'harvester');
 
@@ -62,7 +42,7 @@ module.exports.loop = function() {
 	if(NUM_HARVESTERS < MIN_HARVESTERS) {
 		name = Game.spawns.Shadowhall.createCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE], undefined, { role: 'harvester', working: false, burndown: false });
 		if(name == ERR_NOT_ENOUGH_ENERGY && NUM_HARVESTERS == 0) {
-			name = Game.spawns.Shadowhall.createCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE], undefined, { role: 'harvester', working: false, burndown: false });
+			name = Game.spawns.Shadowhall.createCreep([WORK,CARRY,MOVE], undefined, { role: 'harvester', working: false, burndown: false });
 		} 
 	}
 	else if(NUM_MINERS < MIN_MINERS) {
@@ -79,5 +59,25 @@ module.exports.loop = function() {
 	}
 	else if(NUM_BUILDERS >= MAX_BUILDERS) {
 		console.log("Reached builder limit for room");
+	}
+
+	for(let name in Game.creeps) {
+		var creep = Game.creeps[name];
+
+		if(creep.memory.role == 'harvester') {
+			roleHarvester.run(creep);
+		}
+		if(creep.memory.role == 'miner') {
+			roleMiner.run(creep);
+		}
+		if(creep.memory.role == 'upgrader') {
+			roleUpgrader.run(creep);
+		}
+		if(creep.memory.role == 'builder') {
+			roleBuilder.run(creep);
+		}
+		if(creep.memory.role == 'handyman') {
+			roleHandyman.run(creep);
+		}
 	}
 };

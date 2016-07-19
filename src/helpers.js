@@ -47,6 +47,21 @@ module.exports = {
 		}
 	},
 
+	"gatherStoredEnergy": function(creep) {
+		var filledContainer = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+			filter: (s) => (s.structureType == STRUCTURE_CONTAINER) &&
+							s.store[RESOURCE_ENERGY] > 0
+		});
+		if(filledContainer != undefined) {
+			if(creep.withdraw(filledContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+				creep.moveTo(filledContainer);
+			}
+		}
+		else {
+			throw "NO_STORED_ENERGY";
+		}
+	},
+
 	"upgradeController": function(creep) {
 		if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
 			creep.moveTo(creep.room.controller);
@@ -96,21 +111,6 @@ module.exports = {
 		}
 		else {
 			throw "SPAWNERS_FULL";
-		}
-	},
-
-	"gatherStoredEnergy": function(creep) {
-		var filledContainer = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-			filter: (s) => (s.structureType == STRUCTURE_CONTAINER) &&
-							s.store[RESOURCE_ENERGY] > 0
-		});
-		if(filledContainer != undefined) {
-			if(creep.withdraw(filledContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-				creep.moveTo(filledContainer);
-			}
-		}
-		else {
-			throw "NO_STORED_ENERGY";
 		}
 	}
 }

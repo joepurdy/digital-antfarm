@@ -1,4 +1,5 @@
-let util = require('helpers');
+let util         = require('helpers'),
+    roleUpgrader = require('role.upgrader');
 
 var roleHarvester = {
     run: function(creep) {
@@ -10,7 +11,12 @@ var roleHarvester = {
                 util.transferToStorage(creep);
             }
             catch(err) {
-                util.transferToSpawner(creep);
+                try {
+                    util.transferToSpawner(creep);
+                }
+                catch(err) {
+                    roleUpgrader.run(creep);
+                }
             }
 		}
 		else {
