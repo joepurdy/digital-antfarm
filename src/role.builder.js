@@ -1,7 +1,7 @@
 let util 		 = require('helpers'),
 	roleUpgrader = require('role.upgrader');
 
-var roleBuilder = {
+let roleBuilder = {
     run: function(creep) {
         // Check for work state
         util.isWorking(creep);
@@ -11,12 +11,23 @@ var roleBuilder = {
 				util.buildShit(creep);
 			}
 			catch(err) {
-				// console.log(err);
+				creep.say(err);
 				roleUpgrader.run(creep);
 			}
 		}
 		else {
-			util.gatherEnergy(creep);
+			try {
+				util.withdrawStoredEnergy(creep);
+			}
+			catch(err) {
+				creep.say(err);
+				try {
+					util.gatherEnergy(creep);
+				}
+				catch(err) {
+					creep.say(err);
+				}
+			}			
 		}
     }
 };

@@ -1,6 +1,7 @@
 require('prototype.spawn')();
 var roleHarvester = require('role.harvester'),
 	roleMiner	  = require('role.miner'),
+	roleGatherer  = require('role.gatherer'),
 	roleUpgrader  = require('role.upgrader'),
 	roleBuilder	  = require('role.builder'),
 	roleHandyman  = require('role.handyman');
@@ -13,17 +14,20 @@ module.exports.loop = function() {
 		}
 	}
 
-	var MIN_HARVESTERS = 5,
+	var MIN_HARVESTERS = 1,
 		NUM_HARVESTERS = _.sum(Game.creeps, (c) => c.memory.role == 'harvester');
 
-	var MIN_MINERS = 1,
+	var MIN_MINERS = 2,
 		NUM_MINERS = _.sum(Game.creeps, (c) => c.memory.role == 'miner');
+
+	var MIN_GATHERERS = 5,
+		NUM_GATHERERS = _.sum(Game.creeps, (c) => c.memory.role == 'gatherer');
 
 	var MIN_UPGRADERS = 2,
 		NUM_UPGRADERS = _.sum(Game.creeps, (c) => c.memory.role == 'upgrader');
 
 	var MIN_BUILDERS = 1,
-		MAX_BUILDERS = 7,
+		MAX_BUILDERS = 6,
 		NUM_BUILDERS = _.sum(Game.creeps, (c) => c.memory.role == 'builder');
 
 	var MIN_HANDYMANS = 4,
@@ -31,23 +35,34 @@ module.exports.loop = function() {
 
 	// Echo info
 	console.log('Harvesters: ' + NUM_HARVESTERS + '|' +
-				'Upgraders: ' + NUM_UPGRADERS + '|' +
-				'Builders: ' + NUM_BUILDERS + '|' +
 				'Miners: ' + NUM_MINERS + '|' +
-				'Handymans: ' + NUM_HANDYMANS);
+				'Gatherers: ' + NUM_GATHERERS + '|' +
+				'Upgraders: ' + NUM_UPGRADERS + '|' +
+				'Handymans: ' + NUM_HANDYMANS + '|' +
+				'Builders: ' + NUM_BUILDERS);
 
 	var energy = Game.spawns.Shadowhollow.room.energyCapacityAvailable;
 	var name = undefined;
 
-	if(NUM_HARVESTERS < MIN_HARVESTERS) {
-		name = Game.spawns.Shadowhollow.createCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE], undefined, { role: 'harvester', working: false, burndown: false });
-		if(name == ERR_NOT_ENOUGH_ENERGY && NUM_HARVESTERS == 0) {
-			name = Game.spawns.Shadowhollow.createCreep([WORK,CARRY,MOVE], undefined, { role: 'harvester', working: false, burndown: false });
+	if(NUM_MINERS < 2 && NUM_GATHERERS < 2) {
+		if(NUM_MINERS < MIN_MINERS) {
+			name = Game.spawns.Shadowhollow.createCreep([WORK,WORK,WORK,WORK,WORK,MOVE], undefined, { role: 'miner' });
+			if(name == ERR_NOT_ENOUGH_ENERGY && NUM_HARVESTERS == 0) {
+				name = Game.spawns.Shadowhollow.createCreep([WORK,CARRY,MOVE], undefined, { role: 'harvester', working: false, burndown: false });
+			}
+		} else if(NUM_GATHERERS < MIN_GATHERERS) {
+			name = Game.spawns.Shadowhollow.createCreep([CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], undefined, { role: 'gatherer', working: false, burndown: false });
+			if(name == ERR_NOT_ENOUGH_ENERGY && NUM_HARVESTERS == 0) {
+				name = Game.spawns.Shadowhollow.createCreep([WORK,CARRY,MOVE], undefined, { role: 'harvester', working: false, burndown: false });
+			}
 		} 
 	}
-	// else if(NUM_MINERS < MIN_MINERS) {
-	// 	name = Game.spawns.Shadowhollow.createCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE], undefined, { role: 'miner', working: false, burndown: false });
-	// }
+	else if(NUM_MINERS < MIN_MINERS) {
+		name = Game.spawns.Shadowhollow.createCreep([WORK,WORK,WORK,WORK,WORK,MOVE], undefined, { role: 'miner' });
+	}
+	else if(NUM_GATHERERS < MIN_GATHERERS) {
+		name = Game.spawns.Shadowhollow.createCreep([CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], undefined, { role: 'gatherer', working: false, burndown: false });
+	}
 	else if(NUM_UPGRADERS < MIN_UPGRADERS) {
 		name = Game.spawns.Shadowhollow.createCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE], undefined, { role: 'upgrader', working: false, burndown: false });
 	}
@@ -69,6 +84,9 @@ module.exports.loop = function() {
 		}
 		if(creep.memory.role == 'miner') {
 			roleMiner.run(creep);
+		}
+		if(creep.memory.role == 'gatherer') {
+			roleGatherer.run(creep);
 		}
 		if(creep.memory.role == 'upgrader') {
 			roleUpgrader.run(creep);

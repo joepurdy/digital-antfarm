@@ -34,7 +34,17 @@ module.exports = {
 		}
 	},
 
-	"gatherEnergy": function(creep) {
+	"mineShit": function(creep) {
+		let source = creep.pos.findClosestByPath(FIND_SOURCES);
+		if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+			creep.moveTo(source);
+		}
+		else if(creep.harvest(source) == ERR_NOT_ENOUGH_RESOURCES) {
+			console.log('Miner: ERR_NOT_ENOUGH_RESOURCES');
+		}
+	},
+
+	"harvestEnergy": function(creep) {
 		let source = creep.pos.findClosestByPath(FIND_SOURCES);
 		if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
 			creep.memory.burndown = false;
@@ -47,7 +57,25 @@ module.exports = {
 		}
 	},
 
-	"gatherStoredEnergy": function(creep) {
+	"gatherEnergy": function(creep) {
+		let source = creep.pos.findClosestByPath(FIND_DROPPED_ENERGY);
+		if(source) {
+			if(creep.pickup(source) == ERR_NOT_IN_RANGE) {
+				creep.memory.burndown = false;
+				creep.moveTo(source);
+			}
+		}
+		else {
+			if(creep.carry.energy > 0) {
+				creep.memory.burndown = true;
+			}
+			else {
+				throw "NO_DROPPED_ENERGY";
+			}
+		}
+	},
+
+	"withdrawStoredEnergy": function(creep) {
 		var filledContainer = creep.pos.findClosestByPath(FIND_STRUCTURES, {
 			filter: (s) => (s.structureType == STRUCTURE_CONTAINER) &&
 							s.store[RESOURCE_ENERGY] > 0

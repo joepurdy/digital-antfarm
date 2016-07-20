@@ -9,7 +9,18 @@ var roleUpgrader = {
 			util.upgradeController(creep);
 		}
 		else {
-			util.gatherEnergy(creep);
+			try {
+				util.withdrawStoredEnergy(creep);
+			}
+			catch(err) {
+				creep.say(err);
+				try {
+					util.gatherEnergy(creep);
+				}
+				catch(err) {
+					creep.say(err);
+				}
+			}			
 		}
     }
 };

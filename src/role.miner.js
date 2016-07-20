@@ -1,28 +1,10 @@
-let util         = require('helpers'),
-    roleUpgrader = require('role.upgrader');
+let util = require('helpers');
 
-var roleHarvester = {
+var roleMiner = {
     run: function(creep) {
-        // Check for work state
-        util.isWorking(creep);
-
-		if(creep.memory.working == true) {
-            try {
-                util.transferToStorage(creep);
-            }
-            catch(err) {
-                try {
-                    util.transferToSpawner(creep);
-                }
-                catch(err) {
-                    roleUpgrader.run(creep);
-                }
-            }
-		}
-		else {
-            util.gatherEnergy(creep);
-		}
+        util.mineShit(creep);
+        // refactor later to fall back to upgrading from storage if no energy available
     }
 };
 
-module.exports = roleHarvester;
+module.exports = roleMiner;

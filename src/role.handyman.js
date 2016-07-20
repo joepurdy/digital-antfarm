@@ -11,12 +11,23 @@ var roleHandyman = {
                 util.repairShit(creep);
             }
             catch(err) {
-                // console.log(err);
+                creep.say(err);
                 roleBuilder.run(creep);
             }
 		}
 		else {
-			util.gatherEnergy(creep);
+			try {
+				util.withdrawStoredEnergy(creep);
+			}
+			catch(err) {
+				creep.say(err);
+				try {
+					util.gatherEnergy(creep);
+				}
+				catch(err) {
+					creep.say(err);
+				}
+			}			
 		}
     }
 };
