@@ -34,8 +34,8 @@ module.exports = {
 		}
 	},
 
-	"gatherEnergy": function(creep, id) {
-		let source = Game.getObjectById(id);
+	"gatherEnergy": function(creep) {
+		let source = creep.pos.findClosestByPath(FIND_SOURCES);
 		if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
 			creep.memory.burndown = false;
 			creep.moveTo(source);

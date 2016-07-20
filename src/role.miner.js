@@ -20,7 +20,7 @@ var roleHarvester = {
             }
 		}
 		else {
-            util.gatherEnergy(creep, "577b92ce0f9d51615fa472ab");
+            util.gatherEnergy(creep);
 		}
     }
 };

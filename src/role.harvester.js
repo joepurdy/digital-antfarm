@@ -25,18 +25,18 @@ var roleHarvester = {
             }
             catch(err) {
                 if(err == "SPAWNERS_CAN_FILL") {
-                    console.log('Harvester: ' + err);
+                    // console.log('Harvester: ' + err);
                     try {
                         util.gatherStoredEnergy(creep);
                     }
                     catch(err) {
-                        console.log('Harvester: ' + err);
-                        util.gatherEnergy(creep, "577b92ce0f9d51615fa472a9");
+                        // console.log('Harvester: ' + err);
+                        util.gatherEnergy(creep);
                     }
                 }
                 else if(err == "SPAWNERS_FULL") {
-                    console.log('Harvester: ' + err);
-                    util.gatherEnergy(creep, "577b92ce0f9d51615fa472a9");
+                    // console.log('Harvester: ' + err);
+                    util.gatherEnergy(creep);
                 }
             }
 		}

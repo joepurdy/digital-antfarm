@@ -13,17 +13,17 @@ module.exports.loop = function() {
 		}
 	}
 
-	var MIN_HARVESTERS = 4,
+	var MIN_HARVESTERS = 5,
 		NUM_HARVESTERS = _.sum(Game.creeps, (c) => c.memory.role == 'harvester');
 
 	var MIN_MINERS = 1,
 		NUM_MINERS = _.sum(Game.creeps, (c) => c.memory.role == 'miner');
 
-	var MIN_UPGRADERS = 3,
+	var MIN_UPGRADERS = 2,
 		NUM_UPGRADERS = _.sum(Game.creeps, (c) => c.memory.role == 'upgrader');
 
 	var MIN_BUILDERS = 1,
-		MAX_BUILDERS = 6,
+		MAX_BUILDERS = 7,
 		NUM_BUILDERS = _.sum(Game.creeps, (c) => c.memory.role == 'builder');
 
 	var MIN_HANDYMANS = 4,
@@ -36,26 +36,26 @@ module.exports.loop = function() {
 				'Miners: ' + NUM_MINERS + '|' +
 				'Handymans: ' + NUM_HANDYMANS);
 
-	var energy = Game.spawns.Shadowhall.room.energyCapacityAvailable;
+	var energy = Game.spawns.Shadowhollow.room.energyCapacityAvailable;
 	var name = undefined;
 
 	if(NUM_HARVESTERS < MIN_HARVESTERS) {
-		name = Game.spawns.Shadowhall.createCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE], undefined, { role: 'harvester', working: false, burndown: false });
+		name = Game.spawns.Shadowhollow.createCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE], undefined, { role: 'harvester', working: false, burndown: false });
 		if(name == ERR_NOT_ENOUGH_ENERGY && NUM_HARVESTERS == 0) {
-			name = Game.spawns.Shadowhall.createCreep([WORK,CARRY,MOVE], undefined, { role: 'harvester', working: false, burndown: false });
+			name = Game.spawns.Shadowhollow.createCreep([WORK,CARRY,MOVE], undefined, { role: 'harvester', working: false, burndown: false });
 		} 
 	}
-	else if(NUM_MINERS < MIN_MINERS) {
-		name = Game.spawns.Shadowhall.createCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE], undefined, { role: 'miner', working: false, burndown: false });
-	}
+	// else if(NUM_MINERS < MIN_MINERS) {
+	// 	name = Game.spawns.Shadowhollow.createCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE], undefined, { role: 'miner', working: false, burndown: false });
+	// }
 	else if(NUM_UPGRADERS < MIN_UPGRADERS) {
-		name = Game.spawns.Shadowhall.createCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE], undefined, { role: 'upgrader', working: false, burndown: false });
+		name = Game.spawns.Shadowhollow.createCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE], undefined, { role: 'upgrader', working: false, burndown: false });
 	}
 	else if(NUM_HANDYMANS < MIN_HANDYMANS) {
-		name = Game.spawns.Shadowhall.createCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE], undefined, { role: 'handyman', working: false, burndown: false });
+		name = Game.spawns.Shadowhollow.createCreep([WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE], undefined, { role: 'handyman', working: false, burndown: false });
 	}
 	else if(NUM_BUILDERS < MAX_BUILDERS) {
-		name = Game.spawns.Shadowhall.createCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE], undefined, { role: 'builder', working: false, burndown: false });
+		name = Game.spawns.Shadowhollow.createCreep([WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE], undefined, { role: 'builder', working: false, burndown: false });
 	}
 	else if(NUM_BUILDERS >= MAX_BUILDERS) {
 		console.log("Reached builder limit for room");
